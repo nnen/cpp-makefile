@@ -2,13 +2,17 @@
 # C++ Makefile template
 #
 
-EXE_NAME = a.out
 
-CPP_FILES = $(shell ls *.cpp)
+BIN_NAME     = a.out
+# yes / no
+IS_LIBRARY   = no
+
+CPP_FILES    = $(shell ls *.cpp)
 OBJECT_FILES = $(foreach CPP_FILE, $(CPP_FILES), $(patsubst %.cpp,%.o,$(CPP_FILE)))
-DEP_FILES = $(foreach CPP_FILE, $(CPP_FILES), $(patsubst %.cpp,%.d,$(CPP_FILE)))
+DEP_FILES    = $(foreach CPP_FILE, $(CPP_FILES), $(patsubst %.cpp,%.d,$(CPP_FILE)))
 
-CXXFLAGS = -g
+CXXFLAGS     = -g
+LDFLAGS      =
 
 
 all: $(DEP_FILES)
@@ -20,13 +24,13 @@ all: $(DEP_FILES)
 -include $(DEP_FILES)
 
 
-build: $(EXE_NAME)
+build: $(BIN_NAME)
 
 
 clean:
-	@echo
 	@echo "========= CLEANING ========="
 	rm -f $(OBJECT_FILES) $(EXE_NAME)
+	@echo
 
 
 rebuild:
@@ -41,10 +45,15 @@ clean-deps:
 	rm -f $(DEP_FILES)
 
 
-$(EXE_NAME): $(OBJECT_FILES)
-	@echo
-	@echo "========= LINKING $@ ========="
+$(BIN_NAME): $(OBJECT_FILES)
+ifeq ($(IS_LIBRARY),yes)
+	@echo "========= LINKING EXECUTABLE $@ ========="
+	$(AR) -r $@ $^
+else
+	@echo "========= LINKING LIBRARY $@ ========="
 	$(CXX) $(CXXFLAGS) -o $@ $^ 
+endif
+	@echo
 
 
 .PHONY: all build clean rebuild deps clean-deps
