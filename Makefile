@@ -29,7 +29,7 @@ build: $(BIN_NAME)
 
 clean:
 	@echo "========= CLEANING ========="
-	rm -f $(OBJECT_FILES) $(EXE_NAME)
+	rm -f $(OBJECT_FILES) $(BIN_NAME)
 	@echo
 
 
@@ -47,10 +47,10 @@ clean-deps:
 
 $(BIN_NAME): $(OBJECT_FILES)
 ifeq ($(IS_LIBRARY),yes)
-	@echo "========= LINKING EXECUTABLE $@ ========="
+	@echo "========= LINKING LIBRARY $@ ========="
 	$(AR) -r $@ $^
 else
-	@echo "========= LINKING LIBRARY $@ ========="
+	@echo "========= LINKING EXECUTABLE $@ ========="
 	$(CXX) $(CXXFLAGS) -o $@ $^ 
 endif
 	@echo
