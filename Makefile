@@ -9,6 +9,7 @@ IS_LIBRARY   = no
 
 SRC_DIR      = .
 CPP_FILES    = $(shell ls $(SRC_DIR)/*.cpp)
+H_FILES      = $(shell ls $(SRC_DIR)/*.h)
 OBJECT_FILES = $(foreach CPP_FILE, $(CPP_FILES), $(patsubst %.cpp,%.o,$(CPP_FILE)))
 DEP_FILES    = $(foreach CPP_FILE, $(CPP_FILES), $(patsubst %.cpp,%.d,$(CPP_FILE)))
 
@@ -16,10 +17,6 @@ CXXFLAGS     = -g
 LDFLAGS      =
 
 ECHO         = $(shell which echo)
-
-
-all: $(DEP_FILES)
-	$(MAKE) build
 
 
 -include $(DEP_FILES)
@@ -35,8 +32,8 @@ clean:
 
 
 rebuild:
-	$(MAKE) clean
-	$(MAKE) build
+	@$(MAKE) clean
+	@$(MAKE) build
 
 
 deps: $(DEP_FILES)
@@ -60,7 +57,8 @@ endif
 .PHONY: all build clean rebuild deps clean-deps
 
 
-%.d: %.cpp
+%.d: %.cpp $(H_FILES)
+	@$(ECHO) "Generating \"$@\"..."
 	@$(ECHO) -n "$(SRC_DIR)/" > $@
 	@$(CXX) $(CXXFLAGS) -MM $< >> $@
 
