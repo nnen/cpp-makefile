@@ -7,18 +7,19 @@ BIN_NAME     = a.out
 # yes / no
 IS_LIBRARY   = no
 
-CPP_FILES    = $(shell ls *.cpp)
+SRC_DIR      = .
+CPP_FILES    = $(shell ls $(SRC_DIR)/*.cpp)
 OBJECT_FILES = $(foreach CPP_FILE, $(CPP_FILES), $(patsubst %.cpp,%.o,$(CPP_FILE)))
 DEP_FILES    = $(foreach CPP_FILE, $(CPP_FILES), $(patsubst %.cpp,%.d,$(CPP_FILE)))
 
 CXXFLAGS     = -g
 LDFLAGS      =
 
+ECHO         = $(shell which echo)
+
 
 all: $(DEP_FILES)
 	$(MAKE) build
-	@echo X: $(CPP_FILES)
-	@echo X: $(OBJECT_FILES)
 
 
 -include $(DEP_FILES)
@@ -60,6 +61,7 @@ endif
 
 
 %.d: %.cpp
-	$(CXX) $(CXXFLAGS) -MM -o $@ $<
+	@$(ECHO) -n "$(SRC_DIR)/" > $@
+	@$(CXX) $(CXXFLAGS) -MM $< >> $@
 
 
