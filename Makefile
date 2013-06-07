@@ -19,6 +19,10 @@ LDFLAGS      =
 ECHO         = $(shell which echo)
 
 
+all: $(DEP_FILES)
+	$(MAKE) build
+
+
 -include $(DEP_FILES)
 
 
