@@ -48,10 +48,12 @@ clean-deps:
 
 
 docs:
+	@$(ECHO) "========= GENERATING DOCS ==========================================="
 	doxygen
 
 
 clean-docs:
+	@$(ECHO) "========= CLEANING DOCS ============================================="
 	rm -fR docs/html
 
 
