@@ -4,6 +4,7 @@
 
 
 BIN_NAME     = a.out
+VERSION      = 0.1
 # yes / no
 IS_LIBRARY   = no
 
@@ -13,8 +14,18 @@ H_FILES      = $(shell ls $(SRC_DIR)/*.h)
 OBJECT_FILES = $(foreach CPP_FILE, $(CPP_FILES), $(patsubst %.cpp,%.o,$(CPP_FILE)))
 DEP_FILES    = $(foreach CPP_FILE, $(CPP_FILES), $(patsubst %.cpp,%.d,$(CPP_FILE)))
 
+DOCS_ARCH    = $(BIN_NAME)-$(VERSION)-docs.html.tar.gz
+
+UNAME       := $(shell uname)
 CXXFLAGS     = -Wall -ggdb3 -O0
 LDFLAGS      =
+## Uncomment the block below if you need platform-specific linker flags.
+#ifeq ($(UNAME),Darwin)
+#	LDFLAGS += -framework jackmp
+#else
+#	LDFLAGS += $(shell pkg-config --libs jack)
+#endif
+
 
 ECHO         = $(shell which echo)
 
@@ -50,6 +61,8 @@ clean-deps:
 docs:
 	@$(ECHO) "========= GENERATING DOCS ==========================================="
 	doxygen
+	# WARNING: The paths in the following command depend on settings in Doxyfile
+	cd docs/html; tar -czf ../../$(DOCS_ARCH) ./*
 
 
 clean-docs:
